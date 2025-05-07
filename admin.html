@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administrativo - Streaming App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin-styles.css">
+</head>
+<body>
+    <div class="admin-container">
+        <nav class="sidebar">
+            <div class="logo">
+                <h2>Admin Panel</h2>
+            </div>
+            <ul class="nav-links">
+                <li class="active" data-section="dashboard">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    Dashboard
+                </li>
+                <li data-section="movies">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19.82 2H4.18C2.97 2 2 2.97 2 4.18v15.64C2 21.03 2.97 22 4.18 22h15.64c1.21 0 2.18-.97 2.18-2.18V4.18C22 2.97 21.03 2 19.82 2z"></path>
+                        <path d="M7 2v20"></path>
+                        <path d="M17 2v20"></path>
+                        <path d="M2 12h20"></path>
+                        <path d="M2 7h5"></path>
+                        <path d="M2 17h5"></path>
+                        <path d="M17 17h5"></path>
+                        <path d="M17 7h5"></path>
+                    </svg>
+                    Películas
+                </li>
+                <li data-section="series">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+                        <path d="M7 2v20"></path>
+                        <path d="M17 2v20"></path>
+                        <path d="M2 12h20"></path>
+                        <path d="M2 7h5"></path>
+                        <path d="M2 17h5"></path>
+                    </svg>
+                    Series
+                </li>
+                <li data-section="anime">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                    Anime
+                </li>
+            </ul>
+        </nav>
+        <main class="content">
+            <div class="section" id="dashboard-section">
+                <h1>Dashboard</h1>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Películas</h3>
+                        <p class="stat-number" id="total-movies">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Series</h3>
+                        <p class="stat-number" id="total-series">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Anime</h3>
+                        <p class="stat-number" id="total-anime">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section hidden" id="movies-section">
+                <div class="section-header">
+                    <h1>Películas</h1>
+                    <button class="add-btn" onclick="showAddModal('movie')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Agregar Película
+                    </button>
+                </div>
+                <div class="content-list" id="movies-list"></div>
+            </div>
+
+            <div class="section hidden" id="series-section">
+                <div class="section-header">
+                    <h1>Series</h1>
+                    <button class="add-btn" onclick="showAddModal('series')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Agregar Serie
+                    </button>
+                </div>
+                <div class="content-list" id="series-list"></div>
+            </div>
+
+            <div class="section hidden" id="anime-section">
+                <div class="section-header">
+                    <h1>Anime</h1>
+                    <button class="add-btn" onclick="showAddModal('anime')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Agregar Anime
+                    </button>
+                </div>
+                <div class="content-list" id="anime-list"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal" id="content-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Agregar Contenido</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="content-form">
+                <input type="hidden" id="content-id">
+                <input type="hidden" id="content-type">
+                
+                <div class="form-group">
+                    <label for="title">Título</label>
+                    <input type="text" id="title" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="overview">Descripción</label>
+                    <textarea id="overview" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="poster">URL del Poster</label>
+                    <input type="text" id="poster" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="backdrop">URL del Backdrop</label>
+                    <input type="text" id="backdrop" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="trailer">ID del Trailer (YouTube)</label>
+                    <input type="text" id="trailer">
+                </div>
+
+                <div class="form-group">
+                    <label for="genre">Género</label>
+                    <select id="genre" required>
+                        <option value="action">Acción</option>
+                        <option value="comedy">Comedia</option>
+                        <option value="drama">Drama</option>
+                        <option value="horror">Terror</option>
+                        <option value="scifi">Ciencia Ficción</option>
+                    </select>
+                </div>
+
+                <div class="form-group series-only hidden">
+                    <label for="seasons">Número de Temporadas</label>
+                    <input type="number" id="seasons" min="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="release-date">Fecha de Lanzamiento</label>
+                    <input type="date" id="release-date" required>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="cancel-btn">Cancelar</button>
+                    <button type="submit" class="save-btn">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
