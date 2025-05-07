@@ -1,0 +1,158 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Streamwish Player</title>
+    <meta name="robots" content="noindex">
+    <meta name="referrer" content="never">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link href="https://cdn.rawgit.com/ufilestorage/a/master/skins/jw-logo-bar.css" rel="stylesheet" type="text/css">
+    <script src="https://content.jwplatform.com/libraries/KB5zFt7A.js"></script>
+    <script>jwplayer.key = "XSuP4qMl+9tK17QNb+4+th2Pm9AWgMO/cYH8CI0HGGr7bdjo";</script>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: #000;
+        }
+
+        #uplay_player {
+            position: absolute;
+            width: 100% !important;
+            height: 100% !important;
+            border: none;
+            overflow: hidden;
+        }
+        
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            position: relative;
+            margin-bottom: 12px;
+        }
+        
+        .spinner-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top: 4px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .loading-text {
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            font-weight: 400;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+<div id="loader">
+    <div class="spinner">
+        <div class="spinner-circle"></div>
+    </div>
+    <div class="loading-text">Cargando video</div>
+</div>
+
+<div id="uplay_player"></div>
+
+<script>
+    // Mostrar loader por 2 segundos
+    setTimeout(function() {
+        document.getElementById('loader').style.display = 'none';
+    }, 2000);
+
+    // Obtener parámetros de la URL
+    function getUrlParam(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    }
+
+    const videoId = getUrlParam("v");
+    const posterUrl = getUrlParam("poster");
+
+    if (!videoId) {
+        document.body.innerHTML = "<h3 style='color: red; text-align:center; padding: 20px; font-family: \"Poppins\", sans-serif; font-weight: 400;'>Falta el parámetro ?v=</h3>";
+        document.getElementById('loader').style.display = 'none';
+    } else {
+        const apiUrl = `https://corsproxy.io/?url=https://player-00.live/api/static-stream/${videoId}`;
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                const playerConfig = {
+                    file: "https://player-00.live" + data.sources[0].file,
+                    type: "hls",
+                    width: "100%",
+                    height: "100%",
+                    controls: true,
+                    displaytitle: false,
+                    fullscreen: true,
+                    primary: "html5",
+                    autostart: false,
+                    abouttext: "",
+                    aboutlink: "",
+                    advertising: {
+                        client: "vast",
+                        tag: "#"
+                    },
+                    captions: {
+                        color: "#FFFF00",
+                        fontSize: 14,
+                        edgeStyle: "uniform",
+                        backgroundOpacity: 0
+                    }
+                };
+
+                if (posterUrl) {
+                    playerConfig.image = posterUrl;
+                }
+
+                const videoPlayer = jwplayer("uplay_player");
+                videoPlayer.setup(playerConfig);
+
+                videoPlayer.on("ready", function () {
+                    jwLogoBar.addLogo(videoPlayer);
+                    document.getElementById('loader').style.display = 'none';
+                });
+
+                videoPlayer.addButton(
+                    "",
+                    "Download Movie",
+                    function () {
+                        window.open(data.download.url, "_blank").blur();
+                    }, "download"
+                );
+            })
+            .catch(err => {
+                console.error("Error cargando el video:", err);
+                document.body.innerHTML = "<h3 style='color: red; text-align:center; padding: 20px; font-family: \"Poppins\", sans-serif; font-weight: 400;'>No se pudo cargar el video</h3>";
+                document.getElementById('loader').style.display = 'none';
+            });
+    }
+</script>
+</body>
+</html>
